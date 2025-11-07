@@ -16,9 +16,47 @@ namespace MovieRateMVC.Controllers
 			_signInManager = signInManager;
 		}
 
+		public IActionResult Login()
+		{
+			return View();
+		}
+
 		public IActionResult Register()
 		{
 			return View();
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Login([Bind("Email, Password, RememberMe")] LoginViewModel model)
+		{
+			if (!ModelState.IsValid)
+				return View(model);
+
+			var user = await _userManager.FindByEmailAsync(model.Email);
+
+			if (user == null)
+			{
+				ModelState.AddModelError(string.Empty, "Invalid credentials");
+				return View(model);
+			}
+
+			var result = await _signInManager.CheckPasswordSignInAsync(user, model.Password, true);
+
+			if (result.IsLockedOut)
+			{
+				ModelState.AddModelError(string.Empty, "Account locked due to too many failed attempts. Try again later.");
+				return View(model);
+			}
+			
+			if (!result.Succeeded)
+			{
+				ModelState.AddModelError(string.Empty, "Invalid credentials");
+				return View(model);
+			}
+
+			await _signInManager.SignInAsync(user, model.RememberMe);
+
+			return RedirectToAction("Index", "Home");
 		}
 
 		[HttpPost]
