@@ -1,0 +1,37 @@
+﻿@model AddMovieModel
+
+@{
+	ViewData["Title"] = "Add movie";
+}
+
+<h2>Add movie</h2>
+
+<form asp-action="Add" method="post">
+	<div class="form-group mb-3">
+		<label for="Title">Title</label>
+		<input type="text" asp-for="Title" class="form-control" required />
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="Description">Description</label>
+		<input type="text" asp-for="Description" class="form-control" required />
+	</div>
+
+	<div class="mb-3">
+		<label>Genres</label>
+		<select asp-for="Genres" asp-items="Model.AllGenres" class="form-select" multiple></select>
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="ReleaseDate">Release date</label>
+		<input type="date" asp-for="ReleaseDate" class="form-control" />
+	</div>
+
+	<div class="form-group mb-3">
+		<label for="Director">Director</label>
+		<input type="text" asp-for="Director" class="form-control" />
+	</div>
+
+	<div asp-validation-summary="All" class="text-danger"></div>
+	<input type="submit" class="btn btn-primary" value="Add"/>
+</form>

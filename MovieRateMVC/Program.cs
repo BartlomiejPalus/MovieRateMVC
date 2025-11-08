@@ -2,6 +2,8 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieRateMVC.Data;
 using MovieRateMVC.Data.Entities;
+using MovieRateMVC.Repositories;
+using MovieRateMVC.Repositories.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -29,6 +31,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.LoginPath = "/auth/login";
     options.AccessDeniedPath = "/auth/accessDenied";
 });
+
+builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 
 var app = builder.Build();
 
