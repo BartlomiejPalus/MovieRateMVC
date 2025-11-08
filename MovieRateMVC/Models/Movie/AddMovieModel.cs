@@ -2,7 +2,7 @@
 using MovieRateMVC.Enums;
 using System.ComponentModel.DataAnnotations;
 
-namespace MovieRateMVC.Models
+namespace MovieRateMVC.Models.Movie
 {
 	public class AddMovieModel
 	{

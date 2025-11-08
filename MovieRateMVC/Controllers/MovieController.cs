@@ -1,7 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieRateMVC.Data.Entities;
-using MovieRateMVC.Models;
+using MovieRateMVC.Models.Movie;
 using MovieRateMVC.Repositories.Interfaces;
 
 namespace MovieRateMVC.Controllers
@@ -28,6 +28,25 @@ namespace MovieRateMVC.Controllers
 			return View(model);
 		}
 
+		public async Task<IActionResult> Details(Guid id)
+		{
+			var movie = await _movieRepository.GetByIdAsync(id);
+
+			if (movie == null)
+				return RedirectToAction("Index", "Home");
+
+			var model = new MovieDetailsModel
+			{
+				Title = movie.Title,
+				Description = movie.Description,
+				Genres = movie.Genres.Select(g => g.Name.ToString()).ToList(),
+				ReleaseDate = movie.ReleaseDate,
+				Director = movie.Director,
+			};
+
+			return View(model);
+		}
+
 		[HttpPost]
 		public async Task<IActionResult> Add([Bind("Title", "Description", "Genres", 
 			"ReleaseDate", "Director")] AddMovieModel model)
@@ -35,7 +54,7 @@ namespace MovieRateMVC.Controllers
 			if (!ModelState.IsValid)
 				return View(model);
 
-			var genres = _movieRepository.GetGenresById(model.Genres);
+			var genres = await _movieRepository.GetGenresByIdAsync(model.Genres);
 			var user = await _userManager.GetUserAsync(User);
 
 			var movie = new Movie

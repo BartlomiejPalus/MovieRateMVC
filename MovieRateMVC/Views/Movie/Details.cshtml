@@ -1,0 +1,23 @@
+﻿ @model MovieRateMVC.Models.Movie.MovieDetailsModel
+
+@{
+	ViewData["Title"] = Model.Title;
+}
+
+<h2>@Model.Title</h2>
+
+<p>@Model.Description</p>
+
+<p>Genre@(Model.Genres.Count == 1 ? "" : "s"):
+	@string.Join(", ", Model.Genres)
+</p>
+
+@if (Model.ReleaseDate != null)
+{
+	<p>Release date: @Model.ReleaseDate</p>
+}
+
+@if (Model.Director != null)
+{
+	<p>Director: @Model.Director</p>
+}

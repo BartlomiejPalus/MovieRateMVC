@@ -1,4 +1,5 @@
-﻿using MovieRateMVC.Data;
+﻿using Microsoft.EntityFrameworkCore;
+using MovieRateMVC.Data;
 using MovieRateMVC.Data.Entities;
 using MovieRateMVC.Repositories.Interfaces;
 
@@ -19,9 +20,16 @@ namespace MovieRateMVC.Repositories
 			await _context.SaveChangesAsync();
 		}
 
-		public List<Genre> GetGenresById(List<int> genres)
+		public async Task<Movie?> GetByIdAsync(Guid id)
 		{
-			return _context.Genres.Where(g => genres.Contains(g.Id)).ToList();
+			return await _context.Movies
+				.Include(m => m.Genres)
+				.FirstOrDefaultAsync(m => m.Id == id);
+		}
+
+		public async Task<List<Genre>> GetGenresByIdAsync(List<int> genres)
+		{
+			return await _context.Genres.Where(g => genres.Contains(g.Id)).ToListAsync();
 		}
 	}
 }
