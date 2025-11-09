@@ -1,0 +1,48 @@
+﻿@model MovieRateMVC.Models.Movies.MovieListViewModel
+
+@{
+	ViewData["Title"] = "Movie list";
+}
+
+<h2>Movie list</h2>
+
+<div class="row  row-cols-1 row-cols-md-2 row-cols-lg-4">
+	@foreach (var movie in Model.Movies)
+	{
+		<div class="col">
+			<div class="card mt-2 mb-2">
+				<a class="nav-link text-dark" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">
+					<div class="card-body">
+						<h5 class="card-title">@movie.Title</h5>
+						@if (movie.ReleaseDate != null)
+						{
+							<p class="card-text">@movie.ReleaseDate</p>
+						}
+					</div>
+				</a>
+			</div>
+		</div>
+	}
+</div>
+<nav class="d-flex justify-content-center">
+	<ul class="pagination">
+		<li class="page-item @(Model.CurrentPage == 1 ? "disabled" : "")">
+			<a class="page-link" asp-action="Index" asp-route-PageNumber="@(Model.CurrentPage - 1)">
+				Previous
+			</a>
+		</li>
+		@for (int i = 1; i <= Model.TotalPages; i++)
+		{
+			<li class="page-item @(i == Model.CurrentPage ? "active" : "")">
+				<a class="page-link" asp-action="Index" asp-route-PageNumber="@i">
+					@i
+				</a>
+			</li>
+		}
+		<li class="page-item @(Model.CurrentPage == Model.TotalPages ? "disabled" : "")">
+			<a class="page-link" asp-action="Index" asp-route-PageNumber="@(Model.CurrentPage + 1)">
+				Next
+			</a>
+		</li>
+	</ul>
+</nav>

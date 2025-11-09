@@ -1,5 +1,6 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
+using Microsoft.EntityFrameworkCore;
 using MovieRateMVC.Data.Entities;
 using MovieRateMVC.Models.Movies;
 using MovieRateMVC.Repositories.Interfaces;
@@ -17,9 +18,29 @@ namespace MovieRateMVC.Controllers
 			_movieRepository = movieRepository;
 		}
 
-		public IActionResult Index()
+		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 2)
 		{
-			return View();
+			var query = _movieRepository.GetMovies();
+
+			var totalMovies = await query.CountAsync();
+			var totalPages = (int)Math.Ceiling(totalMovies / (double)PageSize);
+			query = query.Skip((PageNumber - 1) * PageSize).Take(PageSize);
+
+			var movies = await query.Select(m => new MovieListModel
+			{
+				Id = m.Id,
+				Title = m.Title,
+				ReleaseDate = m.ReleaseDate
+			}).ToListAsync();
+
+			var model = new MovieListViewModel
+			{
+				Movies = movies,
+				CurrentPage = PageNumber,
+				TotalPages = totalPages
+			};
+
+			return View(model);
 		}
 
 		public IActionResult Add()

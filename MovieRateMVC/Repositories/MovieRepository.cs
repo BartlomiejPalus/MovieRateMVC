@@ -27,6 +27,13 @@ namespace MovieRateMVC.Repositories
 				.FirstOrDefaultAsync(m => m.Id == id);
 		}
 
+		public IQueryable<Movie> GetMovies()
+		{
+			return _context.Movies
+				.Include(m => m.Genres)
+				.AsQueryable();
+		}
+
 		public async Task<List<Genre>> GetGenresByIdAsync(List<int> genres)
 		{
 			return await _context.Genres.Where(g => genres.Contains(g.Id)).ToListAsync();
