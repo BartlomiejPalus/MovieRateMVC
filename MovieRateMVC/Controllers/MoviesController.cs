@@ -1,17 +1,17 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieRateMVC.Data.Entities;
-using MovieRateMVC.Models.Movie;
+using MovieRateMVC.Models.Movies;
 using MovieRateMVC.Repositories.Interfaces;
 
 namespace MovieRateMVC.Controllers
 {
-	public class MovieController : Controller
+	public class MoviesController : Controller
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly IMovieRepository _movieRepository;
 
-		public MovieController(UserManager<User> userManager, IMovieRepository movieRepository)
+		public MoviesController(UserManager<User> userManager, IMovieRepository movieRepository)
 		{
 			_userManager = userManager;
 			_movieRepository = movieRepository;
