@@ -69,8 +69,8 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
-		public async Task<IActionResult> Add([Bind("Title", "Description", "Genres", 
-			"ReleaseDate", "Director")] AddMovieModel model)
+		public async Task<IActionResult> Add([Bind("Title, Description, Genres, " +
+			"ReleaseDate, Director")] AddMovieModel model)
 		{
 			if (!ModelState.IsValid)
 				return View(model);
@@ -91,6 +91,49 @@ namespace MovieRateMVC.Controllers
 			await _movieRepository.AddAsync(movie);
 
 			return RedirectToAction("Index", "Home");
+		}
+
+		public async Task<IActionResult> Modify(Guid id)
+		{
+			var movie = await _movieRepository.GetByIdAsync(id);
+			if (movie == null)
+				return NotFound();
+
+			var model = new ModifyMovieModel
+			{
+				Id = movie.Id,
+				Title = movie.Title,
+				Description = movie.Description,
+				Genres = movie.Genres.Select(g => g.Id).ToList(),
+				ReleaseDate = movie.ReleaseDate,
+				Director = movie.Director
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> Modify([Bind("Id, Title, Description, Genres, " +
+			"ReleaseDate, Director")] ModifyMovieModel model)
+		{
+			if (!ModelState.IsValid)
+				return View(model);
+
+			var movie = await _movieRepository.GetByIdAsync(model.Id);
+			if (movie == null)
+				return NotFound();
+
+			var genres = await _movieRepository.GetGenresByIdAsync(model.Genres);
+
+			movie.Title = model.Title;
+			movie.Description = model.Description;
+			movie.Genres = genres;
+			movie.ReleaseDate = model.ReleaseDate;
+			movie.Director = model.Director;
+
+			await _movieRepository.SaveChangesAsync();
+
+			return RedirectToAction("Index", "Movies");
 		}
 
 		[HttpGet]

@@ -18,6 +18,7 @@
 						{
 							<p class="card-text">@movie.ReleaseDate</p>
 						}
+						<a asp-controller="Movies" asp-action="Modify" asp-route-id="@movie.Id">Modify</a>
 						<a asp-controller="Movies" asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
 					</div>
 				</a>

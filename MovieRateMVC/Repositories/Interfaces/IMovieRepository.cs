@@ -9,5 +9,6 @@ namespace MovieRateMVC.Repositories.Interfaces
 		IQueryable<Movie> GetMovies();
 		Task DeleteAsync(Movie movie);
 		Task<List<Genre>> GetGenresByIdAsync(List<int> genres);
+		Task SaveChangesAsync();
 	}
 }

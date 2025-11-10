@@ -44,5 +44,10 @@ namespace MovieRateMVC.Repositories
 		{
 			return await _context.Genres.Where(g => genres.Contains(g.Id)).ToListAsync();
 		}
+
+		public async Task SaveChangesAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
 	}
 }
