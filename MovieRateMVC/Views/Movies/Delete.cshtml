@@ -1,0 +1,12 @@
+﻿@model MovieRateMVC.Models.Movies.DeleteMovieModel
+
+@{
+    ViewData["Title"] = "Delete movie";
+}
+
+<h3>Are you sure you want to delete movie: @Model.Title</h3>
+
+<form asp-controller="Movies" asp-action="DeleteConfirmed" asp-route-id="@Model.Id" method="post">
+    <a asp-controller="Movies" asp-action="Index" class="btn btn-primary">Cancel</a>
+    <input type="submit" value="Delete" class="btn btn-danger" />
+</form>

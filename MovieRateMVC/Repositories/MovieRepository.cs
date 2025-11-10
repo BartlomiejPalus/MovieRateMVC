@@ -34,6 +34,12 @@ namespace MovieRateMVC.Repositories
 				.AsQueryable();
 		}
 
+		public async Task DeleteAsync(Movie movie)
+		{
+			_context.Movies.Remove(movie);
+			await _context.SaveChangesAsync();
+		}
+
 		public async Task<List<Genre>> GetGenresByIdAsync(List<int> genres)
 		{
 			return await _context.Genres.Where(g => genres.Contains(g.Id)).ToListAsync();

@@ -18,7 +18,7 @@ namespace MovieRateMVC.Controllers
 			_movieRepository = movieRepository;
 		}
 
-		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 2)
+		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 10)
 		{
 			var query = _movieRepository.GetMovies();
 
@@ -91,6 +91,34 @@ namespace MovieRateMVC.Controllers
 			await _movieRepository.AddAsync(movie);
 
 			return RedirectToAction("Index", "Home");
+		}
+
+		[HttpGet]
+		public async Task<IActionResult> Delete(Guid id)
+		{
+			var movie = await _movieRepository.GetByIdAsync(id);
+			if (movie == null)
+				return NotFound();
+
+			var model = new DeleteMovieModel
+			{
+				Id = movie.Id,
+				Title = movie.Title
+			};
+
+			return View(model);
+		}
+
+		[HttpPost]
+		public async Task<IActionResult> DeleteConfirmed(Guid id)
+		{
+			var movie = await _movieRepository.GetByIdAsync(id);
+			if (movie == null)
+				return NotFound();
+
+			await _movieRepository.DeleteAsync(movie);
+
+			return RedirectToAction("Index", "Movies");
 		}
 	}
 }

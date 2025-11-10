@@ -7,6 +7,7 @@ namespace MovieRateMVC.Repositories.Interfaces
 		Task AddAsync(Movie movie);
 		Task<Movie?> GetByIdAsync(Guid id);
 		IQueryable<Movie> GetMovies();
+		Task DeleteAsync(Movie movie);
 		Task<List<Genre>> GetGenresByIdAsync(List<int> genres);
 	}
 }
