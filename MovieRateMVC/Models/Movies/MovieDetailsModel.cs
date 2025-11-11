@@ -1,16 +1,13 @@
-﻿using System.ComponentModel.DataAnnotations;
-
-namespace MovieRateMVC.Models.Movies
+﻿namespace MovieRateMVC.Models.Movies
 {
 	public class MovieDetailsModel
 	{
-		[Required]
+		public Guid Id { get; set; }
+
 		public string Title { get; set; }
 
-		[Required]
 		public string Description { get; set; }
 
-		[Required]
 		public List<string> Genres { get; set; } = [];
 
 		public DateOnly? ReleaseDate { get; set; }

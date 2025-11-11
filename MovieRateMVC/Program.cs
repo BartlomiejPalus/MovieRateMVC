@@ -38,6 +38,7 @@ builder.Services.ConfigureApplicationCookie(options =>
 });
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
+builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
 var app = builder.Build();
 

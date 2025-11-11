@@ -1,0 +1,22 @@
+﻿using MovieRateMVC.Data;
+using MovieRateMVC.Data.Entities;
+using MovieRateMVC.Repositories.Interfaces;
+
+namespace MovieRateMVC.Repositories
+{
+	public class RatingRepository : IRatingRepository
+	{
+		private readonly ApplicationDbContext _context;
+
+		public RatingRepository(ApplicationDbContext context)
+		{
+			_context = context;
+		}
+
+		public async Task AddAsync(Rating rating)
+		{
+			await _context.Ratings.AddAsync(rating);
+			await _context.SaveChangesAsync();
+		}
+	}
+}

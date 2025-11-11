@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Identity;
+﻿using Microsoft.AspNetCore.Authorization;
+using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieRateMVC.Data.Entities;
@@ -11,11 +12,14 @@ namespace MovieRateMVC.Controllers
 	{
 		private readonly UserManager<User> _userManager;
 		private readonly IMovieRepository _movieRepository;
+		private readonly IRatingRepository _ratingRepository;
 
-		public MoviesController(UserManager<User> userManager, IMovieRepository movieRepository)
+		public MoviesController(UserManager<User> userManager, IMovieRepository movieRepository,
+			IRatingRepository ratingRepository)
 		{
 			_userManager = userManager;
 			_movieRepository = movieRepository;
+			_ratingRepository = ratingRepository;
 		}
 
 		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 10)
@@ -58,6 +62,7 @@ namespace MovieRateMVC.Controllers
 
 			var model = new MovieDetailsModel
 			{
+				Id = movie.Id,
 				Title = movie.Title,
 				Description = movie.Description,
 				Genres = movie.Genres.Select(g => g.Name.ToString()).ToList(),
@@ -162,6 +167,30 @@ namespace MovieRateMVC.Controllers
 			await _movieRepository.DeleteAsync(movie);
 
 			return RedirectToAction("Index", "Movies");
+		}
+
+		[HttpPost]
+		[Authorize]
+		public async Task<IActionResult> Rate(Guid id, int rate)
+		{
+			var user = await _userManager.GetUserAsync(User);
+			if (user == null)
+				return NotFound();
+
+			var movie = await _movieRepository.GetByIdAsync(id);
+			if (movie == null)
+				return NotFound();
+
+			var rating = new Rating
+			{
+				Mark = rate,
+				Movie = movie,
+				User = user
+			};
+
+			await _ratingRepository.AddAsync(rating);
+
+			return RedirectToAction("Details", new { id });
 		}
 	}
 }
