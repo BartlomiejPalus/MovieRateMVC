@@ -23,18 +23,15 @@
 }
 
 <div>
-	<p>Rate movie</p>
+	<p>Rate the movie:</p>
 	<form asp-controller="Movies" asp-action="Rate" asp-route-id="@Model.Id" method="post">
-		<input type="radio" name="rate" value="1" id="rate1" class="form-check-input" />
-		<label for="rate1" class="form-check-label">1</label>
-		<input type="radio" name="rate" value="2" id="rate2" class="form-check-input" />
-		<label for="rate1" class="form-check-label">2</label>
-		<input type="radio" name="rate" value="3" id="rate3" class="form-check-input" />
-		<label for="rate1" class="form-check-label">3</label>
-		<input type="radio" name="rate" value="4" id="rate4" class="form-check-input" />
-		<label for="rate1" class="form-check-label">4</label>
-		<input type="radio" name="rate" value="5" id="rate5" class="form-check-input" />
-		<label for="rate1" class="form-check-label">5</label><br />
-		<input type="submit" value="Save" class="btn btn-primary" />
+		@for (int i=1; i<=5; i++)
+		{
+			<input type="radio" name="rate" value="@i" id="rate@(i)" class="form-check-input" 
+				@(Model.UserRating == i ? "checked" : "")/>
+			<label for='rate@(i)' class="form-check-label">@i</label>
+		}
+		<br />
+		<input type="submit" value="Save" class="btn btn-primary mt-3" />
 	</form>
 </div>

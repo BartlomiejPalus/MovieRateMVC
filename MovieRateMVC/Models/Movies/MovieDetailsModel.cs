@@ -13,5 +13,7 @@
 		public DateOnly? ReleaseDate { get; set; }
 		
 		public string? Director { get; set; }
+
+		public int? UserRating { get; set; }
 	}
 }

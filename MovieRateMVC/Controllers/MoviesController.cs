@@ -60,6 +60,16 @@ namespace MovieRateMVC.Controllers
 			if (movie == null)
 				return RedirectToAction("Index", "Home");
 
+			int userRating = 0;
+			var user = await _userManager.GetUserAsync(User);
+
+			if (user != null)
+			{
+				var rating = await _ratingRepository.GetByMovieAndUserAsync(id, user.Id);
+				if (rating != null)
+					userRating = rating.Mark;
+			}
+			
 			var model = new MovieDetailsModel
 			{
 				Id = movie.Id,
@@ -68,6 +78,7 @@ namespace MovieRateMVC.Controllers
 				Genres = movie.Genres.Select(g => g.Name.ToString()).ToList(),
 				ReleaseDate = movie.ReleaseDate,
 				Director = movie.Director,
+				UserRating = userRating
 			};
 
 			return View(model);

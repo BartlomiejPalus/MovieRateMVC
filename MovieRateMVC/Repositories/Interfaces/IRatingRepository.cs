@@ -5,5 +5,6 @@ namespace MovieRateMVC.Repositories.Interfaces
 	public interface IRatingRepository
 	{
 		Task AddAsync(Rating rating);
+		Task<Rating?> GetByMovieAndUserAsync(Guid movieId, string userId);
 	}
 }
