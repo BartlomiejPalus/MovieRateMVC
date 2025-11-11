@@ -184,6 +184,9 @@ namespace MovieRateMVC.Controllers
 		[Authorize]
 		public async Task<IActionResult> Rate(Guid id, int rate)
 		{
+			if (rate < 1 || rate > 5)
+				return BadRequest("Invalid rate value.");
+
 			var user = await _userManager.GetUserAsync(User);
 			if (user == null)
 				return NotFound();
@@ -192,14 +195,24 @@ namespace MovieRateMVC.Controllers
 			if (movie == null)
 				return NotFound();
 
-			var rating = new Rating
-			{
-				Mark = rate,
-				Movie = movie,
-				User = user
-			};
+			var rating = await _ratingRepository.GetByMovieAndUserAsync(id, user.Id);
 
-			await _ratingRepository.AddAsync(rating);
+			if (rating == null)
+			{
+				rating = new Rating
+				{
+					Mark = rate,
+					Movie = movie,
+					User = user
+				};
+
+				await _ratingRepository.AddAsync(rating);
+			}
+			else
+			{
+				rating.Mark = rate;
+				await _ratingRepository.SaveChangesAsync();
+			}
 
 			return RedirectToAction("Details", new { id });
 		}

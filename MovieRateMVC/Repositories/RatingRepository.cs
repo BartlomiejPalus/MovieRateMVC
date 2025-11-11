@@ -25,5 +25,10 @@ namespace MovieRateMVC.Repositories
 			return await _context.Ratings
 				.FirstOrDefaultAsync(r => r.MovieId == movieId && r.UserId == userId);
 		}
+
+		public async Task SaveChangesAsync()
+		{
+			await _context.SaveChangesAsync();
+		}
 	}
 }
