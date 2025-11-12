@@ -31,6 +31,7 @@ namespace MovieRateMVC.Repositories
 		{
 			return _context.Movies
 				.Include(m => m.Genres)
+				.Include(m => m.Ratings)
 				.AsQueryable();
 		}
 

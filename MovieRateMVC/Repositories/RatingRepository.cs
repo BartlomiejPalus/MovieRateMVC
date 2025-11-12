@@ -26,6 +26,16 @@ namespace MovieRateMVC.Repositories
 				.FirstOrDefaultAsync(r => r.MovieId == movieId && r.UserId == userId);
 		}
 
+		public async Task<double> GetAverageRatingByMovieIdAsync(Guid id)
+		{
+			var ratings = _context.Ratings.Where(r => r.MovieId == id);
+
+			if (!await ratings.AnyAsync())
+				return 0;
+
+			return await ratings.AverageAsync(r => r.Mark);
+		}
+
 		public async Task SaveChangesAsync()
 		{
 			await _context.SaveChangesAsync();

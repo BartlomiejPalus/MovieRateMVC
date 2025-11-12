@@ -15,5 +15,7 @@
 		public string? Director { get; set; }
 
 		public int? UserRating { get; set; }
+
+		public double AverageRating { get; set; }
 	}
 }

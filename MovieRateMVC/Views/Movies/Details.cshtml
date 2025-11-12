@@ -22,6 +22,11 @@
 	<p>Director: @Model.Director</p>
 }
 
+@if (Model.AverageRating != 0)
+{
+	<p>Average rating: @Math.Round(Model.AverageRating, 2)</p>
+}
+
 <div>
 	<p>Rate the movie:</p>
 	<form asp-controller="Movies" asp-action="Rate" asp-route-id="@Model.Id" method="post">

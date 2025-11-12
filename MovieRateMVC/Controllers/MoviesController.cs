@@ -36,7 +36,8 @@ namespace MovieRateMVC.Controllers
 			{
 				Id = m.Id,
 				Title = m.Title,
-				ReleaseDate = m.ReleaseDate
+				ReleaseDate = m.ReleaseDate,
+				AverageRating = m.Ratings.Any() ? m.Ratings.Average(m => m.Mark) : 0
 			}).ToListAsync();
 
 			var model = new MovieListViewModel
@@ -66,6 +67,8 @@ namespace MovieRateMVC.Controllers
 				if (rating != null)
 					userRating = rating.Mark;
 			}
+
+			var avgRating = await _ratingRepository.GetAverageRatingByMovieIdAsync(id);
 			
 			var model = new MovieDetailsModel
 			{
@@ -75,7 +78,8 @@ namespace MovieRateMVC.Controllers
 				Genres = movie.Genres.Select(g => g.Name.ToString()).ToList(),
 				ReleaseDate = movie.ReleaseDate,
 				Director = movie.Director,
-				UserRating = userRating
+				UserRating = userRating,
+				AverageRating = avgRating
 			};
 
 			return View(model);
