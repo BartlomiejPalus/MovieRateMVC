@@ -1,6 +1,7 @@
 ﻿using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using MovieRateMVC.Data.Entities;
+using MovieRateMVC.Enums;
 using MovieRateMVC.Models;
 
 namespace MovieRateMVC.Controllers
@@ -16,11 +17,13 @@ namespace MovieRateMVC.Controllers
 			_signInManager = signInManager;
 		}
 
+		[HttpGet]
 		public IActionResult Login()
 		{
 			return View();
 		}
 
+		[HttpGet]
 		public IActionResult Register()
 		{
 			return View();
@@ -85,6 +88,8 @@ namespace MovieRateMVC.Controllers
 				ModelState.AddModelError(string.Empty, result.Errors.First().Description);
 				return View(model);
 			}
+
+			await _userManager.AddToRoleAsync(user, nameof(UserRoles.User));
 
 			return View("Login");
 		}
