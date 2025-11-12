@@ -2,6 +2,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.EntityFrameworkCore;
 using MovieRateMVC.Data;
 using MovieRateMVC.Data.Entities;
+using MovieRateMVC.Data.Seeders;
 using MovieRateMVC.Repositories;
 using MovieRateMVC.Repositories.Interfaces;
 
@@ -27,7 +28,7 @@ builder.Services.AddIdentity<User, IdentityRole>(options =>
     options.Lockout.MaxFailedAccessAttempts = 5;
     options.Lockout.DefaultLockoutTimeSpan = TimeSpan.FromMinutes(5);
     options.Lockout.AllowedForNewUsers = true;
-})
+})                                                                         
 .AddEntityFrameworkStores<ApplicationDbContext>()
 .AddDefaultTokenProviders();
 
@@ -48,6 +49,12 @@ if (!app.Environment.IsDevelopment())
     app.UseExceptionHandler("/Home/Error");
     // The default HSTS value is 30 days. You may want to change this for production scenarios, see https://aka.ms/aspnetcore-hsts.
     app.UseHsts();
+}
+
+using (var scope = app.Services.CreateScope())
+{
+    var services = scope.ServiceProvider;
+    await UserRolesSeeder.SeedRolesAsync(services);
 }
 
 app.UseHttpsRedirection();
