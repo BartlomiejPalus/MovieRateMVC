@@ -1,6 +1,6 @@
 ﻿using System.ComponentModel.DataAnnotations;
 
-namespace MovieRateMVC.Models
+namespace MovieRateMVC.Models.Auth
 {
 	public class RegisterViewModel
 	{

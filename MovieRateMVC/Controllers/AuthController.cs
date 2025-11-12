@@ -2,7 +2,7 @@
 using Microsoft.AspNetCore.Mvc;
 using MovieRateMVC.Data.Entities;
 using MovieRateMVC.Enums;
-using MovieRateMVC.Models;
+using MovieRateMVC.Models.Auth;
 
 namespace MovieRateMVC.Controllers
 {
