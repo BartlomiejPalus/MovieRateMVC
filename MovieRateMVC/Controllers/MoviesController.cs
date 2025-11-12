@@ -3,6 +3,7 @@ using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
 using MovieRateMVC.Data.Entities;
+using MovieRateMVC.Enums;
 using MovieRateMVC.Models.Movies;
 using MovieRateMVC.Repositories.Interfaces;
 
@@ -22,6 +23,7 @@ namespace MovieRateMVC.Controllers
 			_ratingRepository = ratingRepository;
 		}
 
+		[HttpGet]
 		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 10)
 		{
 			var query = _movieRepository.GetMovies();
@@ -47,12 +49,7 @@ namespace MovieRateMVC.Controllers
 			return View(model);
 		}
 
-		public IActionResult Add()
-		{
-			var model = new AddMovieModel();
-			return View(model);
-		}
-
+		[HttpGet]
 		public async Task<IActionResult> Details(Guid id)
 		{
 			var movie = await _movieRepository.GetByIdAsync(id);
@@ -84,7 +81,16 @@ namespace MovieRateMVC.Controllers
 			return View(model);
 		}
 
+		[HttpGet]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
+		public IActionResult Add()
+		{
+			var model = new AddMovieModel();
+			return View(model);
+		}
+
 		[HttpPost]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Add([Bind("Title, Description, Genres, " +
 			"ReleaseDate, Director")] AddMovieModel model)
 		{
@@ -109,6 +115,8 @@ namespace MovieRateMVC.Controllers
 			return RedirectToAction("Index", "Home");
 		}
 
+		[HttpGet]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Modify(Guid id)
 		{
 			var movie = await _movieRepository.GetByIdAsync(id);
@@ -129,6 +137,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Modify([Bind("Id, Title, Description, Genres, " +
 			"ReleaseDate, Director")] ModifyMovieModel model)
 		{
@@ -153,6 +162,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpGet]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Delete(Guid id)
 		{
 			var movie = await _movieRepository.GetByIdAsync(id);
@@ -169,6 +179,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> DeleteConfirmed(Guid id)
 		{
 			var movie = await _movieRepository.GetByIdAsync(id);
@@ -190,7 +201,7 @@ namespace MovieRateMVC.Controllers
 			var user = await _userManager.GetUserAsync(User);
 			if (user == null)
 				return NotFound();
-
+			
 			var movie = await _movieRepository.GetByIdAsync(id);
 			if (movie == null)
 				return NotFound();
