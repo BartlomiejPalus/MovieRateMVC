@@ -1,4 +1,5 @@
-﻿using Microsoft.AspNetCore.Authorization;
+﻿using AutoMapper;
+using Microsoft.AspNetCore.Authorization;
 using Microsoft.AspNetCore.Identity;
 using Microsoft.AspNetCore.Mvc;
 using Microsoft.EntityFrameworkCore;
@@ -14,13 +15,15 @@ namespace MovieRateMVC.Controllers
 		private readonly UserManager<User> _userManager;
 		private readonly IMovieRepository _movieRepository;
 		private readonly IRatingRepository _ratingRepository;
+		private readonly IMapper _mapper;
 
 		public MoviesController(UserManager<User> userManager, IMovieRepository movieRepository,
-			IRatingRepository ratingRepository)
+			IRatingRepository ratingRepository, IMapper mapper)
 		{
 			_userManager = userManager;
 			_movieRepository = movieRepository;
 			_ratingRepository = ratingRepository;
+			_mapper = mapper;
 		}
 
 		[HttpGet]
@@ -32,13 +35,7 @@ namespace MovieRateMVC.Controllers
 			var totalPages = (int)Math.Ceiling(totalMovies / (double)PageSize);
 			query = query.Skip((PageNumber - 1) * PageSize).Take(PageSize);
 
-			var movies = await query.Select(m => new MovieListModel
-			{
-				Id = m.Id,
-				Title = m.Title,
-				ReleaseDate = m.ReleaseDate,
-				AverageRating = m.Ratings.Any() ? m.Ratings.Average(m => m.Mark) : 0
-			}).ToListAsync();
+			var movies = await query.Select(m => _mapper.Map<MovieListModel>(m)).ToListAsync();
 
 			var model = new MovieListViewModel
 			{
@@ -69,18 +66,10 @@ namespace MovieRateMVC.Controllers
 			}
 
 			var avgRating = await _ratingRepository.GetAverageRatingByMovieIdAsync(id);
-			
-			var model = new MovieDetailsModel
-			{
-				Id = movie.Id,
-				Title = movie.Title,
-				Description = movie.Description,
-				Genres = movie.Genres.Select(g => g.Name.ToString()).ToList(),
-				ReleaseDate = movie.ReleaseDate,
-				Director = movie.Director,
-				UserRating = userRating,
-				AverageRating = avgRating
-			};
+
+			var model = _mapper.Map<MovieDetailsModel>(movie);
+			model.UserRating = userRating;
+			model.AverageRating = avgRating;
 
 			return View(model);
 		}
@@ -104,15 +93,9 @@ namespace MovieRateMVC.Controllers
 			var genres = await _movieRepository.GetGenresByIdAsync(model.Genres);
 			var user = await _userManager.GetUserAsync(User);
 
-			var movie = new Movie
-			{
-				Title = model.Title,
-				Description = model.Description,
-				Genres = genres,
-				ReleaseDate = model.ReleaseDate,
-				Director = model.Director,
-				User = user
-			};
+			var movie = _mapper.Map<Movie>(model);
+			movie.Genres = genres;
+			movie.User = user;
 
 			await _movieRepository.AddAsync(movie);
 
@@ -127,15 +110,7 @@ namespace MovieRateMVC.Controllers
 			if (movie == null)
 				return NotFound();
 
-			var model = new ModifyMovieModel
-			{
-				Id = movie.Id,
-				Title = movie.Title,
-				Description = movie.Description,
-				Genres = movie.Genres.Select(g => g.Id).ToList(),
-				ReleaseDate = movie.ReleaseDate,
-				Director = movie.Director
-			};
+			var model = _mapper.Map<ModifyMovieModel>(movie);
 
 			return View(model);
 		}

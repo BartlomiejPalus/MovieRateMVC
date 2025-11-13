@@ -38,6 +38,8 @@ builder.Services.ConfigureApplicationCookie(options =>
     options.AccessDeniedPath = "/auth/accessDenied";
 });
 
+builder.Services.AddAutoMapper(typeof(Program));
+
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
 
