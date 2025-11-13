@@ -83,6 +83,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Add([Bind("Title, Description, Genres, " +
 			"ReleaseDate, Director")] AddMovieModel model)
@@ -116,6 +117,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> Modify([Bind("Id, Title, Description, Genres, " +
 			"ReleaseDate, Director")] ModifyMovieModel model)
@@ -158,6 +160,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[Authorize(Roles = nameof(UserRoles.Admin))]
 		public async Task<IActionResult> DeleteConfirmed(Guid id)
 		{
@@ -171,6 +174,7 @@ namespace MovieRateMVC.Controllers
 		}
 
 		[HttpPost]
+		[ValidateAntiForgeryToken]
 		[Authorize]
 		public async Task<IActionResult> Rate(Guid id, int rate)
 		{
@@ -186,7 +190,7 @@ namespace MovieRateMVC.Controllers
 				return NotFound();
 
 			var rating = await _ratingRepository.GetByMovieAndUserAsync(id, user.Id);
-
+			
 			if (rating == null)
 			{
 				rating = new Rating
