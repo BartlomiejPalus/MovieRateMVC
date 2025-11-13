@@ -18,6 +18,10 @@ namespace MovieRateMVC.Data
 		{
 			base.OnModelCreating(builder);
 
+			builder.Entity<Rating>()
+				.HasIndex(r => new { r.MovieId, r.UserId })
+				.IsUnique();
+
 			builder.Entity<Genre>()
 				.Property(g => g.Name)
 				.HasConversion<String>();
