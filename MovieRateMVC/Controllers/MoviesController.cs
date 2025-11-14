@@ -7,6 +7,7 @@ using MovieRateMVC.Data.Entities;
 using MovieRateMVC.Enums;
 using MovieRateMVC.Models.Movies;
 using MovieRateMVC.Repositories.Interfaces;
+using MovieRateMVC.Services.Interfaces;
 
 namespace MovieRateMVC.Controllers
 {
@@ -15,33 +16,43 @@ namespace MovieRateMVC.Controllers
 		private readonly UserManager<User> _userManager;
 		private readonly IMovieRepository _movieRepository;
 		private readonly IRatingRepository _ratingRepository;
+		private readonly IMoviesService _moviesService;
 		private readonly IMapper _mapper;
 
 		public MoviesController(UserManager<User> userManager, IMovieRepository movieRepository,
-			IRatingRepository ratingRepository, IMapper mapper)
+			IRatingRepository ratingRepository, IMoviesService moviesService, IMapper mapper)
 		{
 			_userManager = userManager;
 			_movieRepository = movieRepository;
 			_ratingRepository = ratingRepository;
+			_moviesService = moviesService;
 			_mapper = mapper;
 		}
 
 		[HttpGet]
-		public async Task<IActionResult> Index(int PageNumber = 1, int PageSize = 10)
+		public async Task<IActionResult> Index([FromQuery] MovieFilterModel filters)
 		{
+			if (!ModelState.IsValid)
+				return BadRequest();
+
 			var query = _movieRepository.GetMovies();
 
+			query = _moviesService.ApplyFilters(query, filters);
+
+			query = _moviesService.ApplySorting(query, filters);
+
 			var totalMovies = await query.CountAsync();
-			var totalPages = (int)Math.Ceiling(totalMovies / (double)PageSize);
-			query = query.Skip((PageNumber - 1) * PageSize).Take(PageSize);
+			var totalPages = (int)Math.Ceiling(totalMovies / (double)filters.PageSize);
+
+			query = _moviesService.ApplyPagination(query, filters);
 
 			var movies = await query.Select(m => _mapper.Map<MovieListModel>(m)).ToListAsync();
 
 			var model = new MovieListViewModel
 			{
 				Movies = movies,
-				CurrentPage = PageNumber,
-				TotalPages = totalPages
+				TotalPages = totalPages,
+				Filters = filters
 			};
 
 			return View(model);

@@ -5,6 +5,8 @@ using MovieRateMVC.Data.Entities;
 using MovieRateMVC.Data.Seeders;
 using MovieRateMVC.Repositories;
 using MovieRateMVC.Repositories.Interfaces;
+using MovieRateMVC.Services;
+using MovieRateMVC.Services.Interfaces;
 
 var builder = WebApplication.CreateBuilder(args);
 
@@ -42,6 +44,7 @@ builder.Services.AddAutoMapper(typeof(Program));
 
 builder.Services.AddScoped<IMovieRepository, MovieRepository>();
 builder.Services.AddScoped<IRatingRepository, RatingRepository>();
+builder.Services.AddScoped<IMoviesService, MoviesService>();
 
 var app = builder.Build();
 
