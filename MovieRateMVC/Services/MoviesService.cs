@@ -16,6 +16,9 @@ namespace MovieRateMVC.Services
 			if (!filters.Director.IsNullOrEmpty())
 				query = query.Where(q => q.Director.Contains(filters.Director));
 
+			if (filters.Genre != null)
+				query = query.Where(q => q.Genres.Any(g => g.Name == filters.Genre));
+
 			return query;
 		}
 

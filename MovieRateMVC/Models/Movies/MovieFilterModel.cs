@@ -11,6 +11,8 @@ namespace MovieRateMVC.Models.Movies
 		[MaxLength(50)]
 		public string? Director { get; set; }
 
+		public MovieGenre? Genre { get; set; }
+
 		public MovieSortBy SortBy { get; set; } = MovieSortBy.CreatedAt;
 
 		public bool SortDesc { get; set; } = false;

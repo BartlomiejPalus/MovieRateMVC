@@ -21,6 +21,17 @@
 			<input type="text" name="Director" class="form-control" value="@Model.Filters.Director" />
 		</div>
 
+		<div class="mb-3">
+			<label for="Genre" class="form-label">Genre:</label>
+			<select name="Genre" class="form-select">
+				<option value="">All</option>
+				@foreach (var genre in Enum.GetValues(typeof(MovieGenre)))
+				{
+					<option value="@genre" selected="@(Model.Filters.Genre == (MovieGenre)genre)">@genre</option>
+				}
+			</select>
+		</div>
+
 		<div class="form-group mb-3">
 			<label for="SortBy" class="form-label">Sort by:</label>
 			<select name="SortBy" class="form-select">
