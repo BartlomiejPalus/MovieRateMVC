@@ -6,122 +6,131 @@
 	ViewData["Title"] = "Movie list";
 }
 
-<h2>Movie list</h2>
+<h1 class="text-center">Movie list</h1>
 
-<div>
-	<h3>Filters</h3>
-	<form asp-controller="Movies" asp-action="Index" method="get">
-		<div class="form-group mb-3">
-			<label for="Title" class="form-label">Title: </label>
-			<input type="text" name="Title" class="form-control" value="@Model.Filters.Title" />
-		</div>
-
-		<div class="form-group mb-3">
-			<label for="Director" class="form-label">Director:</label>
-			<input type="text" name="Director" class="form-control" value="@Model.Filters.Director" />
-		</div>
-
-		<div class="mb-3">
-			<label for="Genre" class="form-label">Genre:</label>
-			<select name="Genre" class="form-select">
-				<option value="">All</option>
-				@foreach (var genre in Enum.GetValues(typeof(MovieGenre)))
-				{
-					<option value="@genre" selected="@(Model.Filters.Genre == (MovieGenre)genre)">@genre</option>
-				}
-			</select>
-		</div>
-
-		<div class="form-group mb-3">
-			<label for="SortBy" class="form-label">Sort by:</label>
-			<select name="SortBy" class="form-select">
-				<option value="@MovieSortBy.CreatedAt" selected="@(Model.Filters.SortBy == MovieSortBy.CreatedAt)">Created at</option>
-				<option value="@MovieSortBy.Title" selected="@(Model.Filters.SortBy == MovieSortBy.Title)">Title</option>
-				<option value="@MovieSortBy.ReleaseDate" selected="@(Model.Filters.SortBy == MovieSortBy.ReleaseDate)">Release date</option>
-				<option value="@MovieSortBy.Rating" selected="@(Model.Filters.SortBy == MovieSortBy.Rating)">Rating</option>
-			</select>
-		</div>
-
-		<div class="form-group mb-3">
-			<label for="SortDesc" class="form-label">Sort order:</label>
-			<select name="SortDesc" class="form-select">
-				<option value="true" selected="@(Model.Filters.SortDesc)">Descending</option>
-				<option value="false" selected="@(!Model.Filters.SortDesc)">Ascending</option>
-			</select>
-		</div>
-
-		<div class="form-group mb-3">
-			<label for="PageSize" class="form-label">Page size:</label>
-			<select name="PageSize" class="form-select">
-				<option value="20" selected="@(Model.Filters.PageSize == 20)">20</option>
-				<option value="40" selected="@(Model.Filters.PageSize == 40)">40</option>
-				<option value="60" selected="@(Model.Filters.PageSize == 60)">60</option>
-			</select>
-		</div>
-
-		<div asp-validation-summary="All" class="text-danger"></div>
-
-		<input type="submit" value="Apply" class="btn btn-primary" />
-		<a asp-controller="Movies" asp-action="Index" class="btn btn-secondary">Clear</a>
-	</form>
-</div>
-
-<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
-	@foreach (var movie in Model.Movies)
-	{
-		<div class="col">
-			<div class="card mt-2 mb-2">
-				<a class="nav-link text-dark" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">
-					<div class="card-body">
-						<h5 class="card-title">@movie.Title</h5>
-						@if (movie.AverageRating != 0)
-						{
-							<p>Average rating: @Math.Round(movie.AverageRating, 2)</p>
-						}
-						@if (movie.ReleaseDate != null)
-						{
-							<p class="card-text">@movie.ReleaseDate</p>
-						}
-						@if (User.IsInRole("Admin"))
-						{
-							<a asp-controller="Movies" asp-action="Modify" asp-route-id="@movie.Id">Modify</a>
-							<a asp-controller="Movies" asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
-						}
-					</div>
-				</a>
+<div class="d-flex">
+	<div name="filters" class="h-25 p-3 card m-3 sticky-top">
+		<h3 class="text-center mb-3">Filters</h3>
+		<form asp-controller="Movies" asp-action="Index" method="get">
+			<div class="form-group mb-3">
+				<label for="Title" class="form-label">Title: </label>
+				<input type="text" name="Title" class="form-control" value="@Model.Filters.Title" />
 			</div>
-		</div>
-	}
-</div>
-<nav class="d-flex justify-content-center">
-	<ul class="pagination">
-		@{
-			var routeData = new Dictionary<string, string>
+
+			<div class="form-group mb-3">
+				<label for="Director" class="form-label">Director:</label>
+				<input type="text" name="Director" class="form-control" value="@Model.Filters.Director" />
+			</div>
+
+			<div class="mb-3">
+				<label for="Genre" class="form-label">Genre:</label>
+				<select name="Genre" class="form-select">
+					<option value="">All</option>
+					@foreach (var genre in Enum.GetValues(typeof(MovieGenre)))
+					{
+						<option value="@genre" selected="@(Model.Filters.Genre == (MovieGenre)genre)">@genre</option>
+					}
+				</select>
+			</div>
+
+			<div class="form-group mb-3">
+				<label for="SortBy" class="form-label">Sort by:</label>
+				<select name="SortBy" class="form-select">
+					<option value="@MovieSortBy.CreatedAt" selected="@(Model.Filters.SortBy == MovieSortBy.CreatedAt)">Created at</option>
+					<option value="@MovieSortBy.Title" selected="@(Model.Filters.SortBy == MovieSortBy.Title)">Title</option>
+					<option value="@MovieSortBy.ReleaseDate" selected="@(Model.Filters.SortBy == MovieSortBy.ReleaseDate)">Release date</option>
+					<option value="@MovieSortBy.Rating" selected="@(Model.Filters.SortBy == MovieSortBy.Rating)">Rating</option>
+				</select>
+			</div>
+
+			<div class="form-group mb-3">
+				<label for="SortDesc" class="form-label">Sort order:</label>
+				<select name="SortDesc" class="form-select">
+					<option value="true" selected="@(Model.Filters.SortDesc)">Descending</option>
+					<option value="false" selected="@(!Model.Filters.SortDesc)">Ascending</option>
+				</select>
+			</div>
+
+			<div class="form-group mb-3">
+				<label for="PageSize" class="form-label">Page size:</label>
+				<select name="PageSize" class="form-select">
+					<option value="20" selected="@(Model.Filters.PageSize == 20)">20</option>
+					<option value="40" selected="@(Model.Filters.PageSize == 40)">40</option>
+					<option value="60" selected="@(Model.Filters.PageSize == 60)">60</option>
+				</select>
+			</div>
+
+			<div asp-validation-summary="All" class="text-danger"></div>
+
+			<input type="submit" value="Apply" class="btn btn-primary" />
+			<a asp-controller="Movies" asp-action="Index" class="btn btn-secondary">Clear</a>
+		</form>
+	</div>
+	<div class="w-75 m-3">
+		<div class="row row-cols-1 row-cols-md-2 row-cols-lg-4">
+			@foreach (var movie in Model.Movies)
 			{
-				["Title"] = Model.Filters.Title ?? "",
-				["Director"] = Model.Filters.Director ?? "",
-				["SortBy"] = Model.Filters.SortBy.ToString(),
-				["SortDesc"] = Model.Filters.SortDesc.ToString(),
-				["PageSize"] = Model.Filters.PageSize.ToString()
-			};
-		}
-		<li class="page-item @(Model.Filters.PageNumber == 1 ? "disabled" : "")">
-			<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@(Model.Filters.PageNumber - 1)">
-				Previous
-			</a>
-		</li>
-		@for (int i = 1; i <= Model.TotalPages; i++)
-		{
-			<li class="page-item @(i == Model.Filters.PageNumber ? "active" : "")">
-				<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@i">
-					@i
-				</a>
-			</li>
-		}
-		<li class="page-item @(Model.Filters.PageNumber == Model.TotalPages ? "disabled" : "")">
-			<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@(Model.Filters.PageNumber + 1)">
-				Next
-			</a>
-		</li>
-	</ul>
-</nav>
+				<div class="col">
+					<div class="card mb-4">
+						<a class="nav-link text-dark" asp-controller="Movies" asp-action="Details" asp-route-id="@movie.Id">
+							<div class="card-body">
+								<h4 class="card-title">@movie.Title</h4>
+								<div class="card-text">
+									@if (movie.AverageRating != 0)
+									{
+										<p class="card-text">Average rating: @Math.Round(movie.AverageRating, 2)</p>
+									}
+									@if (movie.ReleaseDate != null)
+									{
+										<p class="card-text">@movie.ReleaseDate</p>
+									}
+									@if (User.IsInRole("Admin"))
+									{
+										<div class="text-end">
+											<a asp-controller="Movies" asp-action="Modify" asp-route-id="@movie.Id">Modify</a>
+											<a asp-controller="Movies" asp-action="Delete" asp-route-id="@movie.Id">Delete</a>
+										</div>
+									}
+								</div>
+							</div>
+						</a>
+					</div>
+				</div>
+			}
+		</div>
+
+		<nav class="d-flex justify-content-center mt-3">
+			<ul class="pagination">
+				@{
+					var routeData = new Dictionary<string, string>
+					{
+						["Title"] = Model.Filters.Title ?? "",
+						["Director"] = Model.Filters.Director ?? "",
+						["Genre"] = Model.Filters.Genre.ToString() ?? "",
+						["SortBy"] = Model.Filters.SortBy.ToString(),
+						["SortDesc"] = Model.Filters.SortDesc.ToString(),
+						["PageSize"] = Model.Filters.PageSize.ToString()
+					};
+				}
+				<li class="page-item @(Model.Filters.PageNumber == 1 ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@(Model.Filters.PageNumber - 1)">
+						Previous
+					</a>
+				</li>
+				@for (int i = 1; i <= Model.TotalPages; i++)
+				{
+					<li class="page-item @(i == Model.Filters.PageNumber ? "active" : "")">
+						<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@i">
+							@i
+						</a>
+					</li>
+				}
+				<li class="page-item @(Model.Filters.PageNumber == Model.TotalPages ? "disabled" : "")">
+					<a class="page-link" asp-action="Index" asp-all-route-data="routeData" asp-route-PageNumber="@(Model.Filters.PageNumber + 1)">
+						Next
+					</a>
+				</li>
+			</ul>
+		</nav>
+	</div>
+</div>
