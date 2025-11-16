@@ -5,24 +5,30 @@
     ViewData["Title"] = "Register";
 }
 
-<h2>Register</h2>
+<h1 class="text-center">Register</h1>
 
-<form asp-action="Register" method="post">
-    <div class="form-group mb-3">
-        <label for="Username">Username</label>
-        <input type="text" class="form-control" asp-for="Username" required>
-    </div>
+<div class="d-flex justify-content-center mt-4">
+    <form asp-action="Register" method="post" class="w-50">
+        <div class="form-group mb-3">
+            <label for="Username">Username:</label>
+            <input type="text" class="form-control" asp-for="Username" required>
+        </div>
     
-    <div class="form-group mb-3">
-        <label for="Email">E-mail</label>
-        <input type="email" class="form-control" asp-for="Email" required>
-    </div>
+        <div class="form-group mb-3">
+            <label for="Email">E-mail:</label>
+            <input type="email" class="form-control" asp-for="Email" required>
+        </div>
 
-    <div class="form-group mb-3">
-        <label for="Password">Password</label>
-        <input type="password" class="form-control" asp-for="Password" minlength="6" required>
-    </div>
+        <div class="form-group mb-3">
+            <label for="Password">Password:</label>
+            <input type="password" class="form-control" asp-for="Password" minlength="6" required>
+        </div>
 
-    <div asp-validation-summary="All" class="text-danger"></div>
-    <input type="submit" class="btn btn-primary" value="Register">
-</form>
+        <div class="flex-column">
+            <div asp-validation-summary="All" class="text-danger"></div>
+            <div class="text-center">
+                <input type="submit" class="btn btn-primary" value="Register">
+            </div>
+        </div>
+    </form>
+</div>

@@ -1,37 +1,45 @@
-﻿@model MovieRateMVC.Models.Movies.AddMovieModel
+﻿@using MovieRateMVC.Models.Movies
+@model AddMovieModel
 
 @{
 	ViewData["Title"] = "Add movie";
 }
 
-<h2>Add movie</h2>
+<h1 class="text-center">Add movie</h1>
 
-<form asp-action="Add" method="post">
-	<div class="form-group mb-3">
-		<label for="Title">Title</label>
-		<input type="text" asp-for="Title" class="form-control" required />
-	</div>
+<div class="d-flex justify-content-center">
+	<form asp-action="Add" method="post" class="w-75">
+		<div class="form-group mb-3">
+			<label for="Title">Title:</label>
+			<input type="text" asp-for="Title" class="form-control" required />
+		</div>
 
-	<div class="form-group mb-3">
-		<label for="Description">Description</label>
-		<input type="text" asp-for="Description" class="form-control" required />
-	</div>
+		<div class="form-group mb-3">
+			<label for="Description">Description:</label>
+			<input type="text" asp-for="Description" class="form-control" required />
+		</div>
 
-	<div class="mb-3">
-		<label>Genres</label>
-		<select asp-for="Genres" asp-items="Model.AllGenres" multiple class="form-select"></select>
-	</div>
+		<div class="mb-3">
+			<label>Genres:</label>
+			<select asp-for="Genres" asp-items="Model.AllGenres" multiple class="form-select"></select>
+		</div>
 
-	<div class="form-group mb-3">
-		<label for="ReleaseDate">Release date</label>
-		<input type="date" asp-for="ReleaseDate" class="form-control" />
-	</div>
+		<div class="form-group mb-3">
+			<label for="ReleaseDate">Release date:</label>
+			<input type="date" asp-for="ReleaseDate" class="form-control" />
+		</div>
 
-	<div class="form-group mb-3">
-		<label for="Director">Director</label>
-		<input type="text" asp-for="Director" class="form-control" />
-	</div>
+		<div class="form-group mb-3">
+			<label for="Director">Director:</label>
+			<input type="text" asp-for="Director" class="form-control" />
+		</div>
 
-	<div asp-validation-summary="All" class="text-danger"></div>
-	<input type="submit" class="btn btn-primary" value="Add"/>
-</form>
+		<div class="flex-column">
+			<div asp-validation-summary="All" class="text-danger"></div>
+			<div class="text-center">
+				<a asp-controller="Movies" asp-action="Index" class="btn btn-primary">Cancel</a>
+				<input type="submit" class="btn btn-success" value="Add" />
+			</div>
+		</div>
+	</form>
+</div>
